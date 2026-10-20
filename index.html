@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aviator Analyzer</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      background: #10131c;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    .card {
+      max-width: 420px;
+      margin: 30px auto;
+      padding: 22px;
+      background: #202636;
+      border-radius: 16px;
+    }
+    h1 { color: #ff4757; }
+    input, button {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 13px;
+      margin: 8px 0;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    input { background: #10131c; color: white; border: 1px solid #555; }
+    button { background: #e84152; color: white; border: 0; }
+    #result { font-size: 19px; line-height: 1.7; }
+  </style>
+</head>
+<body>
+  <h1>✈ AVIATOR ANALYZER</h1>
+  <p>Round History & Statistics</p>
+  <div class="card">
+    <h2>Enter Past Results</h2>
+    <p>Enter multiplier values separated by commas.</p>
+    <input id="values" placeholder="1.20, 2.50, 1.05, 4.20">
+    <button onclick="analyze()">Analyze History</button>
+    <div id="result"></div>
+  </div>
+  <script>
+    function analyze() {
+      const values = document.getElementById('values').value
+        .split(',')
+        .map(x => Number(x.trim()))
+        .filter(x => Number.isFinite(x) && x >= 1);
+      const out = document.getElementById('result');
+      if (!values.length) {
+        out.textContent = 'Enter valid results first.';
+        return;
+      }
+      const avg = values.reduce((a,b) => a+b, 0) / values.length;
+      const low = values.filter(x => x < 2).length;
+      const high = values.filter(x => x >= 2).length;
+      out.innerHTML = '';
+      [
+        'Rounds analyzed: ' + values.length,
+        'Average multiplier: ' + avg.toFixed(2) + 'x',
+        'Below 2x: ' + low,
+        '2x or above: ' + high,
+        'Past results do not predict the next round.'
+      ].forEach(line => {
+        const p = document.createElement('p');
+        p.textContent = line;
+        out.appendChild(p);
+      });
+    }
+  </script>
+</body>
+</html>
